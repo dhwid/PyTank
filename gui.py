@@ -15,18 +15,20 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
 
         self.hexy =[]
-        self.size = 100
+        self.size = 50
 
         # Inicjalizacja mapy
-        self.dimension = 7
+        self.dimension = 20
         self.matrix = [[0 for w in range(self.dimension)] for h in range(self.dimension)]
 
         map = Map()
         map.fill_matrix(self.matrix)
+        self.ai = AI()
 
         # kolor obramowania i wypełnienia w formacie RGB
-        self.kolorO = QColor(0, 0, 0)
-        self.kolorW = QColor(200, 30, 40)
+        #self.kolorO = QColor(0, 0, 0)
+        #self.kolorW = QColor(200, 30, 40)
+        self.kolorW = QColor(0,0,0)
         self.timer = QtCore.QBasicTimer()
 
         # Timer
@@ -67,21 +69,31 @@ class Ui_Widget(object):
         qp.end()
 
     def rysujFigury(self, e, qp):
-        qp.setPen(self.kolorO)  # kolor obramowania
-        qp.setBrush(self.kolorW)  # kolor wypełnienia
+        #qp.setPen(self.kolorO)  # kolor obramowania
+        #qp.setBrush(self.kolorW)  # kolor wypełnienia
+        self.kolorW = QColor(0, 0, 0)
         qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
 
         for i in range(self.dimension):
             for j in range(self.dimension):
                 if self.matrix[i][j] == 0:
-                    self.hex = self.drawHex(i,j)
-                    self.hexy.append(self.hex)
+                    self.kolorW = QColor(0, 0, 0)
+                else:
+                    self.kolorW =QColor(200, 30, 40)
 
-        self.size = self.hexy.__len__()
 
-        for i in range(self.size):
+                self.hexy.append(self.kolorW)
+                self.hex = self.drawHex(i,j)
+                self.hexy.append(self.hex)
+
+        size = self.hexy.__len__()
+
+        for i in range(0,size,2):
+            qp.setBrush(self.hexy[i])
+            i+=1
             qp.drawPolygon(self.hexy[i])
-
+            qp.setRenderHint(QPainter.Antialiasing)
+            #qp.setBrush(QColor(200, 30, 40))
         # for i in range(3):
         #     self.hex = self.drawHex(i)
         #     self.hexy.append(self.hex)
@@ -97,8 +109,8 @@ class Ui_Widget(object):
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
-            print("repaint")
-            #self.repaint()
+            self.ai.oponent(self.matrix,self.dimension)
+            self.repaint()
         else:
             QtGui.QFrame.timerEvent(self, event)
 
