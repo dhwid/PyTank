@@ -17,7 +17,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
 
         self.hexy =[]
-        self.size = 50
+        self.size = 20
 
         # Inicjalizacja mapy
         self.dimension = 20
@@ -33,10 +33,12 @@ class Ui_Widget(object):
         self.timer = QtCore.QBasicTimer()
 
         # Timer
-        self.speed = 10
+        self.speed = 1000
         self.timer.start(self.speed, self)
 
-        self.resize(1000, 1000)
+        width = self.dimension*self.size*0.9
+        height = self.dimension*self.size*0.8
+        self.resize(width,height)
         self.setWindowTitle('Widżety')
 
 
@@ -101,7 +103,7 @@ class Ui_Widget(object):
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
-            #self.ai.oponent(self.matrix,self.dimension)
+            self.ai.oponent(self.matrix,self.dimension)
             self.repaint()
         else:
             QtGui.QFrame.timerEvent(self, event)
@@ -110,6 +112,8 @@ class Ui_Widget(object):
         key = e.key()
         self.tank.run(key,self.matrix,self.dimension)
         self.tank.shoot(key,self.matrix,self.dimension)
+        self.repaint()
+
         print("wcisnalem")
 
 

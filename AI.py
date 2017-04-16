@@ -10,7 +10,7 @@ class AI:
 
     def oponent(self,matrix,dimension):
         #map = Map()
-        if(time.clock() - Positions.OPONENT_time> 0.5):
+        #if(time.clock() - Positions.OPONENT_time> 0.5):
             if(Positions.OPONENT_direction_right):
                 self.y = Positions.OPONENT_y + 1
                 if (self.y < dimension):

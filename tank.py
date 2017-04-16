@@ -3,8 +3,8 @@ from PyQt5 import QtCore
 
 class Tank:
 
-    x = 0
-    y = 0
+    x = Positions.AGENT_x
+    y = Positions.AGENT_y
     in_bounds = False
 
 
@@ -17,6 +17,8 @@ class Tank:
 
     def run(self,key,matrix,dimension):
 
+        self.x = Positions.AGENT_x
+        self.y = Positions.AGENT_y
 
         if key == QtCore.Qt.Key_D:
             Positions.AGENT_direction = Direction.RIGHT
@@ -41,7 +43,8 @@ class Tank:
 
         if key == QtCore.Qt.Key_Z:
             Positions.AGENT_direction = Direction.DOWN_LEFT
-            self.y=Positions.AGENT_y-1
+            if ~self.x % 2:
+                self.y = Positions.AGENT_y - 1
             self.x=Positions.AGENT_x+1
             if(self.check_dimensions(dimension)):
                 if(matrix[self.x][self.y]==0):
@@ -52,7 +55,8 @@ class Tank:
 
         if key == QtCore.Qt.Key_C:
             Positions.AGENT_direction = Direction.DOWN_RIGHT
-            self.y=Positions.AGENT_y+1
+            if self.x % 2:
+                self.y=Positions.AGENT_y+1
             self.x=Positions.AGENT_x+1
             if(self.check_dimensions(dimension)):
                 if(matrix[self.x][self.y]==0):
@@ -62,9 +66,11 @@ class Tank:
                     Positions.AGENT_x = self.x
 
 
+
         if key == QtCore.Qt.Key_Q:
             Positions.AGENT_direction = Direction.UP_LEFT
-            self.y=Positions.AGENT_y-1
+            if ~self.x % 2:
+                self.y=Positions.AGENT_y-1
             self.x=Positions.AGENT_x-1
             if(self.check_dimensions(dimension)):
                 if(matrix[self.x][self.y]==0):
@@ -76,7 +82,8 @@ class Tank:
 
         if key == QtCore.Qt.Key_E:
             Positions.AGENT_direction = Direction.UP_RIGHT
-            self.y=Positions.AGENT_y+1
+            if self.x % 2:
+                self.y=Positions.AGENT_y+1
             self.x=Positions.AGENT_x-1
             if(self.check_dimensions(dimension)):
                 if(matrix[self.x][self.y]==0):
