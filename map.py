@@ -13,6 +13,12 @@ class Map:
         matrix[2][6] = BlockType.BRICK
         matrix[2][3] = BlockType.BRICK
         matrix[2][4] = BlockType.FAST
+        matrix[8][5] = BlockType.BRICK
+        matrix[10][6] = BlockType.BRICK
+        matrix[11][6] = BlockType.BRICK
+        matrix[12][5] = BlockType.BRICK
+        matrix[13][6] = BlockType.BRICK
+        matrix[13][7] = BlockType.BRICK
         matrix[Positions.OPONENT_x][Positions.OPONENT_y] = BlockType.OPPONENT
 
         return

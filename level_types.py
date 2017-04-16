@@ -19,8 +19,10 @@ class Positions:
     AGENT_x = 0
     AGENT_y = 3
     AGENT_direction = Direction.RIGHT
+
     OPONENT_x = 6
     OPONENT_y = 3
     OPONENT_time = time.clock()
+    OPONENT_exist = True
     OPONENT_direction_right = True
 

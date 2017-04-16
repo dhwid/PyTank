@@ -31,7 +31,7 @@ class Tank:
                     Positions.AGENT_y = self.y
 
 
-        if key == QtCore.Qt.Key_A:
+        elif key == QtCore.Qt.Key_A:
             Positions.AGENT_direction = Direction.LEFT
             self.y=Positions.AGENT_y-1
             if(self.y >= 0):
@@ -41,7 +41,7 @@ class Tank:
                     Positions.AGENT_y = self.y
 
 
-        if key == QtCore.Qt.Key_Z:
+        elif key == QtCore.Qt.Key_Z:
             Positions.AGENT_direction = Direction.DOWN_LEFT
             if ~self.x % 2:
                 self.y = Positions.AGENT_y - 1
@@ -53,7 +53,7 @@ class Tank:
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
-        if key == QtCore.Qt.Key_C:
+        elif key == QtCore.Qt.Key_C:
             Positions.AGENT_direction = Direction.DOWN_RIGHT
             if self.x % 2:
                 self.y=Positions.AGENT_y+1
@@ -67,7 +67,7 @@ class Tank:
 
 
 
-        if key == QtCore.Qt.Key_Q:
+        elif key == QtCore.Qt.Key_Q:
             Positions.AGENT_direction = Direction.UP_LEFT
             if ~self.x % 2:
                 self.y=Positions.AGENT_y-1
@@ -80,7 +80,7 @@ class Tank:
                     Positions.AGENT_x = self.x
 
 
-        if key == QtCore.Qt.Key_E:
+        elif key == QtCore.Qt.Key_E:
             Positions.AGENT_direction = Direction.UP_RIGHT
             if self.x % 2:
                 self.y=Positions.AGENT_y+1
@@ -99,41 +99,77 @@ class Tank:
             if(Positions.AGENT_direction == Direction.RIGHT):
                 for j in range(Positions.AGENT_y,dimension):
                     if(matrix[Positions.AGENT_x][j]==BlockType.FAST):
-                        j=Positions.AGENT_y
                         break
-                    if(matrix[Positions.AGENT_x][j]==BlockType.BRICK or matrix[Positions.AGENT_x][j]==BlockType.OPPONENT):
+                    elif(matrix[Positions.AGENT_x][j]==BlockType.BRICK or matrix[Positions.AGENT_x][j]==BlockType.OPPONENT):
+                        if matrix[Positions.AGENT_x][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[Positions.AGENT_x][j] = 0
-                        j = Positions.AGENT_y
                         break
 
-            if (Positions.AGENT_direction == Direction.LEFT):
+            elif (Positions.AGENT_direction == Direction.LEFT):
                 for j in range(Positions.AGENT_y, -1,-1):
                     if (matrix[Positions.AGENT_x][j] == BlockType.FAST):
-                        j = Positions.AGENT_y
                         break
-                    if (matrix[Positions.AGENT_x][j] == BlockType.BRICK or matrix[Positions.AGENT_x][
-                        j] == BlockType.OPPONENT):
+                    elif (matrix[Positions.AGENT_x][j] == BlockType.BRICK or matrix[Positions.AGENT_x][j] == BlockType.OPPONENT):
+                        if matrix[Positions.AGENT_x][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[Positions.AGENT_x][j] = 0
-                        j = Positions.AGENT_y
                         break
 
-            if (Positions.AGENT_direction == Direction.DOWN_LEFT):
+            elif (Positions.AGENT_direction == Direction.DOWN_LEFT):
                 i=Positions.AGENT_x
-                for j in range(Positions.AGENT_y-1, -1,-1):
+                j=Positions.AGENT_y
+                while j > 0:
+                    if(~i%2): j+=-1
                     i+=1
-                    if(Positions.AGENT_x==dimension):
-                        i = Positions.AGENT_x
-                        j = Positions.AGENT_y
+                    if(i >= dimension):
                         break
-                    if (matrix[i][j] == BlockType.FAST):
-                        i= Positions.AGENT_x
-                        j = Positions.AGENT_y
+                    elif (matrix[i][j] == BlockType.FAST):
                         break
-                    if (matrix[i][j] == BlockType.BRICK or matrix[i][
-                    j] == BlockType.OPPONENT):
-                        print("jeb")
+                    elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
+                        if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[i][j] = 0
-                        i = Positions.AGENT_x
-                        j = Positions.AGENT_y
                         break
 
+            elif (Positions.AGENT_direction == Direction.DOWN_RIGHT):
+                i=Positions.AGENT_x
+                j=Positions.AGENT_y
+                while j < dimension:
+                    if(i%2): j+=1
+                    i+=1
+                    if(i >=dimension):
+                        break
+                    elif (matrix[i][j] == BlockType.FAST):
+                        break
+                    elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
+                        if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
+                        matrix[i][j] = 0
+                        break
+
+            elif (Positions.AGENT_direction == Direction.UP_LEFT):
+                i=Positions.AGENT_x
+                j=Positions.AGENT_y
+                while j > 0:
+                    if(~i%2): j+=-1
+                    i+=-1
+                    if(i < 0):
+                        break
+                    elif (matrix[i][j] == BlockType.FAST):
+                        break
+                    elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
+                        if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
+                        matrix[i][j] = 0
+                        break
+
+            elif (Positions.AGENT_direction == Direction.UP_RIGHT):
+                i=Positions.AGENT_x
+                j=Positions.AGENT_y
+                while j <= dimension:
+                    if(i%2): j+=1
+                    i+=-1
+                    if(i < 0):
+                        break
+                    elif (matrix[i][j] == BlockType.FAST):
+                        break
+                    elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
+                        if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
+                        matrix[i][j] = 0
+                        break

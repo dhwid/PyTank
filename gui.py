@@ -114,8 +114,6 @@ class Ui_Widget(object):
         self.tank.shoot(key,self.matrix,self.dimension)
         self.repaint()
 
-        print("wcisnalem")
-
 
 class Ksztalty:
     """ Klasa pomocnicza, symuluje typ wyliczeniowy """
