@@ -7,6 +7,8 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from AI import *
 from map import *
+from level_types import*
+from tank import*
 
 
 class Ui_Widget(object):
@@ -24,15 +26,14 @@ class Ui_Widget(object):
         map = Map()
         map.fill_matrix(self.matrix)
         self.ai = AI()
+        self.tank = Tank()
 
         # kolor obramowania i wypełnienia w formacie RGB
-        #self.kolorO = QColor(0, 0, 0)
-        #self.kolorW = QColor(200, 30, 40)
         self.kolorW = QColor(0,0,0)
         self.timer = QtCore.QBasicTimer()
 
         # Timer
-        self.speed = 1000
+        self.speed = 10
         self.timer.start(self.speed, self)
 
         self.resize(1000, 1000)
@@ -42,7 +43,6 @@ class Ui_Widget(object):
     def drawHex(self,i,j):
 
         self.x= (3**0.5 / 2)
-        #self.size = 200
         odd_offset = 0
 
         if i%2:
@@ -69,17 +69,21 @@ class Ui_Widget(object):
         qp.end()
 
     def rysujFigury(self, e, qp):
-        #qp.setPen(self.kolorO)  # kolor obramowania
-        #qp.setBrush(self.kolorW)  # kolor wypełnienia
         self.kolorW = QColor(0, 0, 0)
         qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
 
         for i in range(self.dimension):
             for j in range(self.dimension):
-                if self.matrix[i][j] == 0:
+                if self.matrix[i][j] == BlockType.EMPTY:
                     self.kolorW = QColor(0, 0, 0)
-                else:
+                elif self.matrix[i][j] == BlockType.BRICK:
                     self.kolorW =QColor(200, 30, 40)
+                elif self.matrix[i][j] == BlockType.AGENT:
+                    self.kolorW =QColor(200, 200, 40)
+                elif self.matrix[i][j] == BlockType.OPPONENT:
+                    self.kolorW =QColor(100, 200, 0)
+                elif self.matrix[i][j] == BlockType.FAST:
+                    self.kolorW = QColor(222, 213, 208)
 
 
                 self.hexy.append(self.kolorW)
@@ -93,26 +97,21 @@ class Ui_Widget(object):
             i+=1
             qp.drawPolygon(self.hexy[i])
             qp.setRenderHint(QPainter.Antialiasing)
-            #qp.setBrush(QColor(200, 30, 40))
-        # for i in range(3):
-        #     self.hex = self.drawHex(i)
-        #     self.hexy.append(self.hex)
-        #
-        # self.size = self.hexy.__len__()
-        # print(self.size)
-        # self.a = self.size -2
-        #
-        # for i in range(self.a,self.size):
-        #     qp.drawPolygon(self.hexy[i])
-
 
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
-            self.ai.oponent(self.matrix,self.dimension)
+            #self.ai.oponent(self.matrix,self.dimension)
             self.repaint()
         else:
             QtGui.QFrame.timerEvent(self, event)
+
+    def keyPressEvent(self, e):
+        key = e.key()
+        self.tank.run(key,self.matrix,self.dimension)
+        self.tank.shoot(key,self.matrix,self.dimension)
+        print("wcisnalem")
+
 
 class Ksztalty:
     """ Klasa pomocnicza, symuluje typ wyliczeniowy """
