@@ -15,7 +15,7 @@ class Tank:
             in_bounds = False
         return in_bounds
 
-    def run(self,key,matrix,dimension):
+    def run(self,key,matrix,dimension,changes):
 
         self.x = Positions.AGENT_x
         self.y = Positions.AGENT_y
@@ -28,7 +28,14 @@ class Tank:
                 if(matrix[Positions.AGENT_x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[Positions.AGENT_x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[Positions.AGENT_x][self.y] = 1
+
                     Positions.AGENT_y = self.y
+
+
+
 
 
         elif key == QtCore.Qt.Key_A:
@@ -38,7 +45,13 @@ class Tank:
                 if(matrix[Positions.AGENT_x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[Positions.AGENT_x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[Positions.AGENT_x][self.y] = 1
+
                     Positions.AGENT_y = self.y
+
+
 
 
         elif key == QtCore.Qt.Key_Z:
@@ -50,6 +63,10 @@ class Tank:
                 if(matrix[self.x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[self.x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[self.x][self.y] = 1
+
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
@@ -62,6 +79,10 @@ class Tank:
                 if(matrix[self.x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[self.x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[self.x][self.y] = 1
+
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
@@ -76,6 +97,10 @@ class Tank:
                 if(matrix[self.x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[self.x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[self.x][self.y] = 1
+
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
@@ -89,11 +114,15 @@ class Tank:
                 if(matrix[self.x][self.y]==0):
                     matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
                     matrix[self.x][self.y] = 1
+
+                    changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+                    changes[self.x][self.y] = 1
+
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
 
-    def shoot(self,key,matrix,dimension):
+    def shoot(self,key,matrix,dimension,changes):
 
         if key == QtCore.Qt.Key_Space:
             if(Positions.AGENT_direction == Direction.RIGHT):
@@ -103,6 +132,7 @@ class Tank:
                     elif(matrix[Positions.AGENT_x][j]==BlockType.BRICK or matrix[Positions.AGENT_x][j]==BlockType.OPPONENT):
                         if matrix[Positions.AGENT_x][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[Positions.AGENT_x][j] = 0
+                        changes[Positions.AGENT_x][j] = 1
                         break
 
             elif (Positions.AGENT_direction == Direction.LEFT):
@@ -112,6 +142,7 @@ class Tank:
                     elif (matrix[Positions.AGENT_x][j] == BlockType.BRICK or matrix[Positions.AGENT_x][j] == BlockType.OPPONENT):
                         if matrix[Positions.AGENT_x][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[Positions.AGENT_x][j] = 0
+                        changes[Positions.AGENT_x][j] = 1
                         break
 
             elif (Positions.AGENT_direction == Direction.DOWN_LEFT):
@@ -127,6 +158,7 @@ class Tank:
                     elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
                         if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[i][j] = 0
+                        changes[i][j] = 1
                         break
 
             elif (Positions.AGENT_direction == Direction.DOWN_RIGHT):
@@ -142,6 +174,7 @@ class Tank:
                     elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
                         if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[i][j] = 0
+                        changes[i][j] = 1
                         break
 
             elif (Positions.AGENT_direction == Direction.UP_LEFT):
@@ -157,6 +190,7 @@ class Tank:
                     elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
                         if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[i][j] = 0
+                        changes[i][j] = 1
                         break
 
             elif (Positions.AGENT_direction == Direction.UP_RIGHT):
@@ -172,4 +206,5 @@ class Tank:
                     elif (matrix[i][j] == BlockType.BRICK or matrix[i][j] == BlockType.OPPONENT):
                         if matrix[i][j] == BlockType.OPPONENT: Positions.OPONENT_exist = False
                         matrix[i][j] = 0
+                        changes[i][j] = 1
                         break

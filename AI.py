@@ -8,7 +8,7 @@ class AI:
     x = 0
     y = 0
 
-    def oponent(self,matrix,dimension):
+    def oponent(self,matrix,dimension,changes):
         #map = Map()
         if(Positions.OPONENT_exist):
         #if(time.clock() - Positions.OPONENT_time> 0.5):
@@ -18,6 +18,10 @@ class AI:
                     if (matrix[Positions.OPONENT_x][self.y] == 0):
                         matrix[Positions.OPONENT_x][Positions.OPONENT_y] = 0
                         matrix[Positions.OPONENT_x][self.y] = 2
+
+                        changes[Positions.OPONENT_x][Positions.OPONENT_y] = 1
+                        changes[Positions.OPONENT_x][self.y] = 1
+
                         Positions.OPONENT_y = self.y
                         #map.paint_map(dimension, matrix)
                     else: Positions.OPONENT_direction_right=False
@@ -29,6 +33,10 @@ class AI:
                     if (matrix[Positions.OPONENT_x][self.y] == 0):
                         matrix[Positions.OPONENT_x][Positions.OPONENT_y] = 0
                         matrix[Positions.OPONENT_x][self.y] = 2
+
+                        changes[Positions.OPONENT_x][Positions.OPONENT_y] = 1
+                        changes[Positions.OPONENT_x][self.y] = 1
+
                         Positions.OPONENT_y = self.y
                         #map.paint_map(dimension,matrix)
                     else:

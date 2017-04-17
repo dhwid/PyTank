@@ -9,6 +9,7 @@ from AI import *
 from map import *
 from level_types import*
 from tank import*
+import numpy as np
 
 
 class Ui_Widget(object):
@@ -22,6 +23,7 @@ class Ui_Widget(object):
         # Inicjalizacja mapy
         self.dimension = 20
         self.matrix = [[0 for w in range(self.dimension)] for h in range(self.dimension)]
+        self.changes = np.ones((self.dimension,self.dimension))
 
         map = Map()
         map.fill_matrix(self.matrix)
@@ -67,7 +69,7 @@ class Ui_Widget(object):
     def paintEvent(self, e):
         qp = QPainter()
         qp.begin(self)
-        self.rysujFigury(e, qp)
+        self.rysujFigury1(e, qp)
         qp.end()
 
     def rysujFigury(self, e, qp):
@@ -100,19 +102,52 @@ class Ui_Widget(object):
             qp.drawPolygon(self.hexy[i])
             qp.setRenderHint(QPainter.Antialiasing)
 
+    def rysujFigury1(self, e, qp):
+        self.kolorW = QColor(0, 0, 0)
+        qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
+
+        for i in range(self.dimension):
+            for j in range(self.dimension):
+                if(self.changes[i][j]):
+                    if self.matrix[i][j] == BlockType.EMPTY:
+                        self.kolorW = QColor(0, 0, 0)
+                    elif self.matrix[i][j] == BlockType.BRICK:
+                        self.kolorW =QColor(200, 30, 40)
+                    elif self.matrix[i][j] == BlockType.AGENT:
+                        self.kolorW =QColor(200, 200, 40)
+                    elif self.matrix[i][j] == BlockType.OPPONENT:
+                        self.kolorW =QColor(100, 200, 0)
+                    elif self.matrix[i][j] == BlockType.FAST:
+                        self.kolorW = QColor(222, 213, 208)
+
+
+                    self.hexy.append(self.kolorW)
+                    self.hex = self.drawHex(i,j)
+                    self.hexy.append(self.hex)
+
+        self.changes = np.zeros((self.dimension, self.dimension))
+        size = self.hexy.__len__()
+
+        for i in range(0,size,2):
+            qp.setBrush(self.hexy[i])
+            i+=1
+            qp.drawPolygon(self.hexy[i])
+            qp.setRenderHint(QPainter.Antialiasing)
+
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
-            self.ai.oponent(self.matrix,self.dimension)
+            self.ai.oponent(self.matrix,self.dimension,self.changes)
             self.repaint()
         else:
             QtGui.QFrame.timerEvent(self, event)
 
     def keyPressEvent(self, e):
         key = e.key()
-        self.tank.run(key,self.matrix,self.dimension)
-        self.tank.shoot(key,self.matrix,self.dimension)
+        self.tank.run(key,self.matrix,self.dimension,self.changes)
+        self.tank.shoot(key,self.matrix,self.dimension,self.changes)
         self.repaint()
+
 
 
 class Ksztalty:
