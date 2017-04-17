@@ -69,40 +69,11 @@ class Ui_Widget(object):
     def paintEvent(self, e):
         qp = QPainter()
         qp.begin(self)
-        self.rysujFigury1(e, qp)
+        self.rysujFigury(e, qp)
         qp.end()
 
+
     def rysujFigury(self, e, qp):
-        self.kolorW = QColor(0, 0, 0)
-        qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
-
-        for i in range(self.dimension):
-            for j in range(self.dimension):
-                if self.matrix[i][j] == BlockType.EMPTY:
-                    self.kolorW = QColor(0, 0, 0)
-                elif self.matrix[i][j] == BlockType.BRICK:
-                    self.kolorW =QColor(200, 30, 40)
-                elif self.matrix[i][j] == BlockType.AGENT:
-                    self.kolorW =QColor(200, 200, 40)
-                elif self.matrix[i][j] == BlockType.OPPONENT:
-                    self.kolorW =QColor(100, 200, 0)
-                elif self.matrix[i][j] == BlockType.FAST:
-                    self.kolorW = QColor(222, 213, 208)
-
-
-                self.hexy.append(self.kolorW)
-                self.hex = self.drawHex(i,j)
-                self.hexy.append(self.hex)
-
-        size = self.hexy.__len__()
-
-        for i in range(0,size,2):
-            qp.setBrush(self.hexy[i])
-            i+=1
-            qp.drawPolygon(self.hexy[i])
-            qp.setRenderHint(QPainter.Antialiasing)
-
-    def rysujFigury1(self, e, qp):
         self.kolorW = QColor(0, 0, 0)
         qp.setPen(QColor(0,200,0))
         qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
@@ -134,6 +105,42 @@ class Ui_Widget(object):
             i+=1
             qp.drawPolygon(self.hexy[i])
             qp.setRenderHint(QPainter.Antialiasing)
+
+        self.drawGun(qp)
+
+    def drawGun(self,qp):
+
+        if ~Positions.AGENT_x%2:
+            odd_offset = self.size/2 * self.x
+        else: odd_offset = self.size * self.x
+
+        self.offsetx = self.size * Positions.AGENT_y * self.x + odd_offset
+        self.offsety = (self.size / 4 + self.size / 2)*Positions.AGENT_x
+
+        x0 = self.offsetx
+        y0 = self.size / 2 + self.offsety
+
+        if Positions.AGENT_direction == Direction.RIGHT:
+            x1 = x0 + self.size/2*self.x
+            y1 = y0
+        elif Positions.AGENT_direction == Direction.LEFT:
+            x1 = x0 - self.size/2*self.x
+            y1 = y0
+        elif Positions.AGENT_direction == Direction.UP_RIGHT:
+            x1 = x0 + self.size/4*self.x
+            y1 = y0 - self.size/3
+        elif Positions.AGENT_direction == Direction.UP_LEFT:
+            x1 = x0 - self.size/4*self.x
+            y1 = y0 - self.size/3
+        elif Positions.AGENT_direction == Direction.DOWN_RIGHT:
+            x1 = x0 + self.size/4*self.x
+            y1 = y0 + self.size/3
+        elif Positions.AGENT_direction == Direction.DOWN_LEFT:
+            x1 = x0 - self.size/4*self.x
+            y1 = y0 + self.size/3
+
+        qp.drawLine(x0, y0, x1, y1)
+
 
     def timerEvent(self, event):
 
