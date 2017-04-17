@@ -18,7 +18,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
 
         self.hexy =[]
-        self.size = 20
+        self.size = 40
 
         # Inicjalizacja mapy
         self.dimension = 20
@@ -104,6 +104,7 @@ class Ui_Widget(object):
 
     def rysujFigury1(self, e, qp):
         self.kolorW = QColor(0, 0, 0)
+        qp.setPen(QColor(0,200,0))
         qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
 
         for i in range(self.dimension):
