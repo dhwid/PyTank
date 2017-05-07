@@ -15,7 +15,7 @@ class Tank:
             in_bounds = False
         return in_bounds
 
-    def run(self,key,matrix,dimension,changes):
+    def run(self,key,matrix,dimension,changes,history):
 
         self.x = Positions.AGENT_x
         self.y = Positions.AGENT_y
@@ -31,6 +31,7 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[Positions.AGENT_x][self.y] = 1
+                    history.add('QtCore.Qt.Key_D')
 
                     Positions.AGENT_y = self.y
 
@@ -48,6 +49,7 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[Positions.AGENT_x][self.y] = 1
+                    history.add('QtCore.Qt.Key_A')
 
                     Positions.AGENT_y = self.y
 
@@ -66,6 +68,7 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[self.x][self.y] = 1
+                    history.add('QtCore.Qt.Key_Z')
 
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
@@ -82,6 +85,7 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[self.x][self.y] = 1
+                    history.add('QtCore.Qt.Key_C')
 
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
@@ -100,6 +104,7 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[self.x][self.y] = 1
+                    history.add('QtCore.Qt.Key_Q')
 
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
@@ -117,10 +122,13 @@ class Tank:
 
                     changes[Positions.AGENT_x][Positions.AGENT_y] = 1
                     changes[self.x][self.y] = 1
+                    history.add('QtCore.Qt.Key_E')
 
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
+        elif key == QtCore.Qt.Key_S:
+            history.saveXML()
 
     def shoot(self,key,matrix,dimension,changes):
 

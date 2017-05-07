@@ -10,6 +10,7 @@ from map import *
 from level_types import*
 from tank import*
 import numpy as np
+from recording import*
 
 
 class Ui_Widget(object):
@@ -19,6 +20,11 @@ class Ui_Widget(object):
 
         self.hexy =[]
         self.size = 40
+        self.key = 0
+
+        #tworzenie xml
+        self.history = History()
+
 
         # Inicjalizacja mapy
         self.dimension = 20
@@ -35,8 +41,9 @@ class Ui_Widget(object):
         self.timer = QtCore.QBasicTimer()
 
         # Timer
-        self.speed = 1000
+        self.speed = 500
         self.timer.start(self.speed, self)
+
 
         width = self.dimension*self.size*0.9
         height = self.dimension*self.size*0.8
@@ -75,7 +82,7 @@ class Ui_Widget(object):
 
     def rysujFigury(self, e, qp):
         self.kolorW = QColor(0, 0, 0)
-        qp.setPen(QColor(0,200,0))
+        qp.setPen(QColor(0,0,0))
         qp.setRenderHint(QPainter.Antialiasing)  # wygładzanie kształtu
 
         for i in range(self.dimension):
@@ -146,14 +153,17 @@ class Ui_Widget(object):
 
         if event.timerId() == self.timer.timerId():
             self.ai.oponent(self.matrix,self.dimension,self.changes)
+            self.tank.run(self.key, self.matrix, self.dimension, self.changes, self.history)
+            self.tank.shoot(self.key, self.matrix, self.dimension, self.changes)
+            self.key = 0
             self.repaint()
         else:
             QtGui.QFrame.timerEvent(self, event)
 
     def keyPressEvent(self, e):
-        key = e.key()
-        self.tank.run(key,self.matrix,self.dimension,self.changes)
-        self.tank.shoot(key,self.matrix,self.dimension,self.changes)
+        self.key = e.key()
+        #self.tank.run(key,self.matrix,self.dimension,self.changes,self.history)
+        #self.tank.shoot(key,self.matrix,self.dimension,self.changes)
         self.repaint()
 
 
