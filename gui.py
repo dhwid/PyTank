@@ -21,6 +21,7 @@ class Ui_Widget(object):
         self.hexy =[]
         self.size = 40
         self.key = 0
+        self.agentHistory = []
 
         #tworzenie xml
         self.history = History()
@@ -152,9 +153,10 @@ class Ui_Widget(object):
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
-            self.ai.oponent(self.matrix,self.dimension,self.changes)
+            self.ai.oponent(self.matrix,self.dimension,self.changes,self.history)
             self.tank.run(self.key, self.matrix, self.dimension, self.changes, self.history)
             self.tank.shoot(self.key, self.matrix, self.dimension, self.changes)
+            self.history.addAgent(str(self.key))
             self.key = 0
             self.repaint()
         else:
@@ -162,12 +164,20 @@ class Ui_Widget(object):
 
     def keyPressEvent(self, e):
         self.key = e.key()
+        if (self.key == QtCore.Qt.Key_O):
+            self.history.parseXML(self.agentHistory)
+            self.replay()
+
         #self.tank.run(key,self.matrix,self.dimension,self.changes,self.history)
         #self.tank.shoot(key,self.matrix,self.dimension,self.changes)
         self.repaint()
 
+    def replay(self):
+        for i in range(self.agentHistory.__len__()):
+            key = int(self.agentHistory[i])
+            self.ai.oponent(self.matrix, self.dimension, self.changes, self.history)
+            self.tank.run(key, self.matrix, self.dimension, self.changes, self.history)
+            self.tank.shoot(key, self.matrix, self.dimension, self.changes)
+            self.repaint()
+            time.sleep(0.5)
 
-
-class Ksztalty:
-    """ Klasa pomocnicza, symuluje typ wyliczeniowy """
-    Rect, Ellipse, Polygon, Line = range(4)
