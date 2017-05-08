@@ -121,12 +121,11 @@ class Tank:
                     Positions.AGENT_y = self.y
                     Positions.AGENT_x = self.x
 
-        elif key == QtCore.Qt.Key_S:
-            history.saveXML()
+
 
     def shoot(self,key,matrix,dimension,changes):
 
-        if key == QtCore.Qt.Key_Space:
+        if key == QtCore.Qt.Key_F:
             if(Positions.AGENT_direction == Direction.RIGHT):
                 for j in range(Positions.AGENT_y,dimension):
                     if(matrix[Positions.AGENT_x][j]==BlockType.FAST):

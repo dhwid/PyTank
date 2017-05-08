@@ -3,7 +3,9 @@
 
 from __future__ import unicode_literals
 from PyQt5.QtGui import QPainter, QColor
+from PyQt5.QtWidgets import QPushButton
 from PyQt5 import QtGui
+from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtCore
 from AI import *
 from map import *
@@ -22,6 +24,7 @@ class Ui_Widget(object):
         self.size = 40
         self.key = 0
         self.agentHistory = []
+        self.notReplay = True
 
         #tworzenie xml
         self.history = History()
@@ -32,8 +35,16 @@ class Ui_Widget(object):
         self.matrix = [[0 for w in range(self.dimension)] for h in range(self.dimension)]
         self.changes = np.ones((self.dimension,self.dimension))
 
-        map = Map()
-        map.fill_matrix(self.matrix)
+        button = QPushButton('zapisz', self)
+        button.move(10,self.dimension*self.size*0.77 )
+        button.clicked.connect(self.saveToXML)
+
+        button1 = QPushButton('powtorka', self)
+        button1.move(150,self.dimension*self.size*0.77 )
+        button1.clicked.connect(self.replay)
+
+        self.map = Map()
+        self.map.fill_matrix(self.matrix)
         self.ai = AI()
         self.tank = Tank()
 
@@ -47,7 +58,7 @@ class Ui_Widget(object):
 
 
         width = self.dimension*self.size*0.9
-        height = self.dimension*self.size*0.8
+        height = self.dimension*self.size*0.82
         self.resize(width,height)
         self.setWindowTitle('Widżety')
 
@@ -152,7 +163,7 @@ class Ui_Widget(object):
 
     def timerEvent(self, event):
 
-        if event.timerId() == self.timer.timerId():
+        if ((event.timerId() == self.timer.timerId()) and self.notReplay) :
             self.ai.oponent(self.matrix,self.dimension,self.changes,self.history)
             self.tank.run(self.key, self.matrix, self.dimension, self.changes, self.history)
             self.tank.shoot(self.key, self.matrix, self.dimension, self.changes)
@@ -164,20 +175,41 @@ class Ui_Widget(object):
 
     def keyPressEvent(self, e):
         self.key = e.key()
-        if (self.key == QtCore.Qt.Key_O):
-            self.history.parseXML(self.agentHistory)
-            self.replay()
-
         #self.tank.run(key,self.matrix,self.dimension,self.changes,self.history)
         #self.tank.shoot(key,self.matrix,self.dimension,self.changes)
         self.repaint()
 
+
+    def replayHandler(self):
+        self.replay = True
+        self.map.fill_matrix(self.matrix)
+        self.changes = np.ones((self.dimension, self.dimension))
+        self.history.parseXML(self.agentHistory)
+
+
+
+    def saveToXML(self):
+        self.history.saveXML()
+
     def replay(self):
+        self.replay = False
+        self.matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
+        self.matrix[Positions.OPONENT_x][Positions.OPONENT_y] = 0
+        Positions.AGENT_x = 0
+        Positions.AGENT_y = 3
+        Positions.OPONENT_x = 6
+        Positions.OPONENT_y = 3
+        Positions.OPONENT_exist = True
+        self.map.fill_matrix(self.matrix)
+        self.changes = np.ones((self.dimension, self.dimension))
+        self.history.parseXML(self.agentHistory)
         for i in range(self.agentHistory.__len__()):
+            print('Replay')
             key = int(self.agentHistory[i])
             self.ai.oponent(self.matrix, self.dimension, self.changes, self.history)
             self.tank.run(key, self.matrix, self.dimension, self.changes, self.history)
             self.tank.shoot(key, self.matrix, self.dimension, self.changes)
             self.repaint()
             time.sleep(0.5)
+        self.notReplay = True
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<history>
+	<agent>
+		<move>0</move>
+		<move>0</move>
+		<move>68</move>
+		<move>67</move>
+		<move>70</move>
+		<move>67</move>
+		<move>67</move>
+		<move>67</move>
+		<move>67</move>
+		<move>67</move>
+		<move>70</move>
+		<move>0</move>
+		<move>68</move>
+		<move>70</move>
+		<move>0</move>
+		<move>68</move>
+		<move>68</move>
+		<move>0</move>
+		<move>0</move>
+	</agent>
+	<oponent>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+		<move>1</move>
+	</oponent>
+</history>
