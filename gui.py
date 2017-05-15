@@ -13,6 +13,8 @@ from level_types import*
 from tank import*
 import numpy as np
 from recording import*
+from player_AI import *
+import random
 
 
 class Ui_Widget(object):
@@ -25,6 +27,10 @@ class Ui_Widget(object):
         self.key = 0
         self.agentHistory = []
         self.notReplay = True
+        self.visitedX = []
+        self.visitedY = []
+        self.enableAI = False
+        self.counter = 1
 
         #tworzenie xml
         self.history = History()
@@ -35,13 +41,18 @@ class Ui_Widget(object):
         self.matrix = [[0 for w in range(self.dimension)] for h in range(self.dimension)]
         self.changes = np.ones((self.dimension,self.dimension))
 
-        button = QPushButton('zapisz', self)
+        # button = QPushButton('zapisz', self)
+        # button.move(10,self.dimension*self.size*0.77 )
+        # button.clicked.connect(self.saveToXML)
+        #
+        # button1 = QPushButton('powtorka', self)
+        # button1.move(150,self.dimension*self.size*0.77 )
+        # button1.clicked.connect(self.replay)
+
+        button = QPushButton('AI', self)
         button.move(10,self.dimension*self.size*0.77 )
         button.clicked.connect(self.saveToXML)
 
-        button1 = QPushButton('powtorka', self)
-        button1.move(150,self.dimension*self.size*0.77 )
-        button1.clicked.connect(self.replay)
 
         self.map = Map()
         self.map.fill_matrix(self.matrix)
@@ -163,13 +174,38 @@ class Ui_Widget(object):
 
     def timerEvent(self, event):
 
-        if ((event.timerId() == self.timer.timerId()) and self.notReplay) :
+        if ((event.timerId() == self.timer.timerId()) and self.notReplay and not self.enableAI) :
             self.ai.oponent(self.matrix,self.dimension,self.changes,self.history)
             self.tank.run(self.key, self.matrix, self.dimension, self.changes, self.history)
             self.tank.shoot(self.key, self.matrix, self.dimension, self.changes)
             self.history.addAgent(str(self.key))
             self.key = 0
             self.repaint()
+        elif(self.enableAI):
+            if(self.counter ==10):
+                self.visitedX.clear()
+                self.visitedY.clear()
+                self.search(Positions.AGENT_x, Positions.AGENT_y)
+                self.counter=0
+
+            self.key = random.randint(68,71)
+            self.matrix[Positions.AGENT_x][Positions.AGENT_y] = 0
+            self.matrix[self.visitedX[self.counter]][self.visitedY[self.counter]] = BlockType.AGENT
+            self.changes[Positions.AGENT_x][Positions.AGENT_y] = 1
+            self.changes[self.visitedX[self.counter]][self.visitedY[self.counter]] = 1
+
+            Positions.AGENT_x = self.visitedX[self.counter]
+            Positions.AGENT_y = self.visitedY[self.counter]
+            self.ai.oponent(self.matrix,self.dimension,self.changes,self.history)
+            self.tank.shoot(self.key, self.matrix, self.dimension, self.changes)
+            self.counter+=1
+            if(self.counter>=self.visitedX.__len__()):
+                self.enableAI = False
+                self.visitedX.clear()
+                self.visitedY.clear()
+                self.counter = 0
+            self.repaint()
+
         else:
             QtGui.QFrame.timerEvent(self, event)
 
@@ -189,7 +225,34 @@ class Ui_Widget(object):
 
 
     def saveToXML(self):
-        self.history.saveXML()
+        self.counter = 0
+        self.enableAI = not self.enableAI
+        if(Positions.OPONENT_exist):
+            self.search(Positions.AGENT_x, Positions.AGENT_y)
+        if (self.visitedX.__len__()<2):
+            self.enableAI = False
+            self.visitedX.clear()
+            self.visitedY.clear()
+
+    def search(self,x,y):
+        if self.matrix[x][y] == BlockType.OPPONENT:
+            return True
+        elif self.matrix[x][y] == BlockType.BRICK or self.matrix[x][y] == BlockType.FAST:
+            return False
+        elif self.matrix[x][y] == BlockType.VISTITED:
+            return False
+
+        self.matrix[x][y] = BlockType.VISTITED
+        self.visitedX.append(x)
+        self.visitedY.append(y)
+
+        if ((x < self.dimension and self.search(x + 1, y))
+            or (y > 0 and self.search(x, y - 1))
+            or (x > 0 and self.search(x - 1, y))
+            or (y < self.dimension and self.search(x+1,y))):
+            return True
+
+        return False
 
     def replay(self):
         self.replay = False

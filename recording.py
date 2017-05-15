@@ -1,10 +1,12 @@
 from xml.dom import minidom, Node
 
 
+
 class History:
 
     def __init__(self):
         self.doc = minidom.Document()
+
 
 
         self.history = self.doc.createElement('history')

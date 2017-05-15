@@ -4,6 +4,7 @@ from level_types import *
 class Map:
 
 
+
     def fill_matrix(selfl,matrix):
         matrix[Positions.AGENT_x][Positions.AGENT_y] = BlockType.AGENT
         matrix[0][5] = BlockType.BRICK

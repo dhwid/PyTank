@@ -6,6 +6,7 @@ class BlockType:
     OPPONENT = 2
     BRICK = 3
     FAST = 4
+    VISTITED = 5
 
 class Direction:
     LEFT = 0
